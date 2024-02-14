@@ -2,6 +2,7 @@ import './bootstrap'
 import * as Sentry from "@sentry/node";
 import { ProfilingIntegration } from "@sentry/profiling-node";
 import * as express from "express";
+import { SomeService } from './service';
 
 const app = express();
 
@@ -26,15 +27,27 @@ app.use(Sentry.Handlers.requestHandler());
 // TracingHandler creates a trace for every incoming request
 app.use(Sentry.Handlers.tracingHandler());
 
+const someService = new SomeService()
+
 // All your controllers should live here
 app.get("/", function rootHandler(req, res) {
-  res.end("Hello world!");
+  res.json({
+    status: 'ok',
+  });
+});
+
+app.get("/user/1", function rootHandler(req, res) {
+  res.json(someService.getUser());
+});
+
+app.get("/user/2", function rootHandler(req, res) {
+  res.json(someService.getUserWithError());
 });
 
 // The error handler must be registered before any other error middleware and after all controllers
 app.use(Sentry.Handlers.errorHandler());
 
-// Optional fallthrough error handler
+// // Optional fallthrough error handler
 app.use(function onError(err, req, res, next) {
   // The error id is attached to `res.sentry` to be returned
   // and optionally displayed to the user for support.
