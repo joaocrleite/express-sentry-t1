@@ -12,4 +12,8 @@ export class SomeService {
         throw Error('User not found')
     }
 
+    otherError(){
+        throw Error('Fruit not found')
+    }
+
 }

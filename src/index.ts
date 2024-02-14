@@ -44,6 +44,10 @@ app.get("/user/2", function rootHandler(req, res) {
   res.json(someService.getUserWithError());
 });
 
+app.get("/user/3", function rootHandler(req, res) {
+  res.json(someService.otherError());
+});
+
 // The error handler must be registered before any other error middleware and after all controllers
 app.use(Sentry.Handlers.errorHandler());
 
